@@ -143,6 +143,9 @@ class SocialVideo
         elseif (false !== ($id = self::getYoutubeId($url))) {
             return 'http://www.youtube.com/embed/' . $id;
         }
+        else if ($parts == parse_url($url)) {
+            return $url;
+        }
 
         return false;
     }
@@ -186,6 +189,11 @@ EEE;
             var_dump($id);
             $code .= <<<EEE
     <div class='embed-container'><iframe src='http://www.youtube.com/embed/$id' frameborder='0' allowfullscreen></iframe></div>
+EEE;
+        }
+        else if ($parts == parse_url($url)) {
+            $code .= <<<EEE
+    <div class='embed-container'><iframe src='$url' frameborder='0' controls></iframe></div>
 EEE;
         }
         else {
