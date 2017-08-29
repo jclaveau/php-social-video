@@ -43,15 +43,18 @@ class SocialVideo
     public static function getYoutubeId($url)
     {
         $parts = parse_url($url);
-        if (isset($parts['host'])) {
-            $host = $parts['host'];
-            if (
-                false === strpos($host, 'youtube') &&
-                false === strpos($host, 'youtu.be')
-            ) {
-                return false;
-            }
+
+        if (!isset($parts['host']))
+            return false;
+
+        $host = $parts['host'];
+        if (
+            false === strpos($host, 'youtube') &&
+            false === strpos($host, 'youtu.be')
+        ) {
+            return false;
         }
+
         if (isset($parts['query'])) {
             parse_str($parts['query'], $qs);
             if (isset($qs['v'])) {
@@ -61,6 +64,7 @@ class SocialVideo
                 return $qs['vi'];
             }
         }
+
         if (isset($parts['path'])) {
             $path = explode('/', trim($parts['path'], '/'));
             return $path[count($path) - 1];
@@ -179,6 +183,7 @@ EEE;
 EEE;
         }
         elseif (false !== ($id = self::getYoutubeId($url))) {
+            var_dump($id);
             $code .= <<<EEE
     <div class='embed-container'><iframe src='http://www.youtube.com/embed/$id' frameborder='0' allowfullscreen></iframe></div>
 EEE;

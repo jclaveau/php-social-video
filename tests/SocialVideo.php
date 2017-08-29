@@ -1,22 +1,8 @@
 <?php
+namespace JClaveau\SocialVideo;
 
 
-require_once __DIR__ . '/SocialVideo.php';
-
-
-function a()
-{
-    foreach (func_get_args() as $arg) {
-        ob_start();
-        var_dump($arg);
-        $output = ob_get_clean();
-        if ('1' !== ini_get('xdebug.default_enable')) {
-            $output = preg_replace("!\]\=\>\n(\s+)!m", "] => ", $output);
-        }
-        echo '<pre>' . $output . '</pre>';
-    }
-}
-
+require_once __DIR__ . '/../src/SocialVideo.php';
 
 //------------------------------------------------------------------------------/
 // TESTS
@@ -89,39 +75,81 @@ $dailymotion = [
     'http://dai.ly/x2jvvep',
 ];
 
+$local = [
+    '/video/babla.mp4',
+    '/medias/models/Campaign_Native/891/url_video/979/2017-08-29_moi_je_me_la_pete?_.mp4',
+];
 
-echo '<h1>Ids</h1>';
+
+echo "Ids\n";
 foreach ($vimeo as $url) {
-    a(SocialVideo::getVimeoId($url));
+    echo "Vimeo\n";
+    $result = SocialVideo::getVimeoId($url);
+    var_dump($result);
 }
-echo '<hr>';
+echo "\n\n\n";
 foreach ($vimeoInvalid as $url) {
-    a(SocialVideo::getVimeoId($url));
+    echo "Vimeo invalid\n";
+    $result = SocialVideo::getVimeoId($url);
+    var_dump($result);
 }
-echo '<hr>';
+echo "\n\n\n";
 foreach ($youtube as $url) {
-    a(SocialVideo::getYoutubeId($url));
+    echo "Youtube\n";
+    $result = SocialVideo::getYoutubeId($url);
+    var_dump($result);
 }
-echo '<hr>';
+echo "\n\n\n";
+foreach ($local as $url) {
+    echo "Youtube Local\n";
+    $result = SocialVideo::getYoutubeId($url);
+    var_dump($result);
+}
+
+echo "\n\n\n";
 foreach ($dailymotion as $url) {
-    a(SocialVideo::getDailyMotionId($url));
+    echo "Dailymotion\n";
+    $result = SocialVideo::getDailyMotionId($url);
+    var_dump($result);
+}
+foreach ($local as $url) {
+    echo "Dailymotion Local\n";
+    $result = SocialVideo::getDailyMotionId($url);
+    var_dump($result);
+}
+
+// return;
+
+
+echo "\n\n\n";
+foreach ($local as $url) {
+    echo "Local\n";
+    $result = SocialVideo::getDailyMotionId($url);
+    var_dump($result);
 }
 
 
-echo '<hr>';
-echo '<h1>Thumbnails</h1>';
+echo "\n\n\n";
+foreach ($local as $url) {
+    echo "Local\n";
+    $result = SocialVideo::getEmbedVideo($url);
+    var_dump($result);
+}
+
+
+
+
+
+// return;
+
+
+echo "\n\n\n";
+echo "Thumbnails\n";
 $mixed = array_merge($vimeo, $youtube, $dailymotion);
 
 
 foreach ($mixed as $url) {
-    $thumb = SocialVideo::getVideoThumbnailByUrl($url);
-    if (false !== $thumb) {
-        echo '<img src="' . $thumb . '" />';
-    }
-    else {
-        echo 'not found';
-    }
-    echo '<br>';
-    echo SocialVideo::getVideoLocation($url);
-    echo '<br>';
+    $thumb_src = SocialVideo::getVideoThumbnailByUrl($url);
+    echo 'Thumb: ' . $thumb_src ."\n";
+    echo 'Location: ' . SocialVideo::getVideoLocation($url) ."\n";
 }
