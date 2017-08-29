@@ -47,6 +47,8 @@ class SocialVideo
         if (!isset($parts['host']))
             return false;
 
+        var_dump($parts);
+
         $host = $parts['host'];
         if (
             false === strpos($host, 'youtube') &&
@@ -92,9 +94,9 @@ class SocialVideo
      */
     public static function isSocialVideo($url)
     {
-        return false !== self::getVimeoId($url)
-            && false !== self::getYoutubeId($url)
-            && false !== self::getDailyMotionId($url)
+        return self::getVimeoId($url)
+            || self::getYoutubeId($url)
+            || self::getDailyMotionId($url)
             ;
     }
 
