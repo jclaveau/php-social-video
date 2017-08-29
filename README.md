@@ -1,6 +1,6 @@
-Video ids and thumbnails (Based on the work of lingtalfi [video-ids-and-thumbnails](https://github.com/lingtalfi/video-ids-and-thumbnails))
+Video ids and thumbnails
 =============================
-2017-08-29
+2017-08-29 (Based on the work of lingtalfi [video-ids-and-thumbnails](https://github.com/lingtalfi/video-ids-and-thumbnails))
 
 
 
