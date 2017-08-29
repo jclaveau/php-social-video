@@ -72,6 +72,32 @@ class SocialVideo
         return false;
     }
 
+    /**
+     * Returns true if the url is valid which means it could be a simple
+     * video file uploaded somewhere.
+     *
+     * @todo add checks mime-type check?
+     */
+    public static function isVideoFile($url)
+    {
+        return (bool) parse_url($url);
+    }
+
+    /**
+     * Returns true if the url is valid which means it could be a simple
+     * video file uploaded somewhere.
+     *
+     * @todo add checks mime-type check?
+     */
+    public static function isSocialVideo($url)
+    {
+        return false !== self::getVimeoId($url)
+            && false !== self::getYoutubeId($url)
+            && false !== self::getDailyMotionId($url)
+            ;
+    }
+
+
 
     /**
      * Gets the thumbnail url associated with an url from either:
@@ -143,7 +169,7 @@ class SocialVideo
         elseif (false !== ($id = self::getYoutubeId($url))) {
             return 'http://www.youtube.com/embed/' . $id;
         }
-        else if (parse_url($url)) {
+        else if (self::isVideoFile($url)) {
             return $url;
         }
 
@@ -190,7 +216,7 @@ EEE;
     <div class='embed-container'><iframe src='http://www.youtube.com/embed/$id' frameborder='0' allowfullscreen></iframe></div>
 EEE;
         }
-        else if (parse_url($url)) {
+        else if (self::isVideoFile($url)) {
             $code .= <<<EEE
     <div class='embed-container'><iframe src='$url' frameborder='0' controls></iframe></div>
 EEE;
