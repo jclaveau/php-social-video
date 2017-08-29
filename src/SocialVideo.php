@@ -77,11 +77,26 @@ class SocialVideo
      * video file uploaded somewhere.
      *
      * @todo add checks mime-type or extension check?
+     * @return bool
      */
     public static function isVideoFile($url)
     {
         return !self::isSocialVideo($url)
             && (bool) parse_url($url);
+    }
+
+    /**
+     * Returns true if the url is valid which means it could be a simple
+     * video file uploaded somewhere.
+     *
+     * @return bool
+     */
+    public static function isLocalVideoFile($url)
+    {
+        $parts = parse_url($url);
+
+        return !self::isSocialVideo($url)
+            && $parts && !$parts['host'];
     }
 
     /**
