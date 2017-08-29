@@ -1,7 +1,7 @@
 <?php
 
 
-require_once __DIR__ . '/function.video.php';
+require_once __DIR__ . '/SocialVideo.php';
 
 
 function a()
@@ -19,7 +19,7 @@ function a()
 
 
 //------------------------------------------------------------------------------/
-// TESTS 
+// TESTS
 //------------------------------------------------------------------------------/
 $vimeo = [
     'https://vimeo.com/87973054',
@@ -92,19 +92,19 @@ $dailymotion = [
 
 echo '<h1>Ids</h1>';
 foreach ($vimeo as $url) {
-    a(getVimeoId($url));
+    a(SocialVideo::getVimeoId($url));
 }
 echo '<hr>';
 foreach ($vimeoInvalid as $url) {
-    a(getVimeoId($url));
+    a(SocialVideo::getVimeoId($url));
 }
 echo '<hr>';
 foreach ($youtube as $url) {
-    a(getYoutubeId($url));
+    a(SocialVideo::getYoutubeId($url));
 }
 echo '<hr>';
 foreach ($dailymotion as $url) {
-    a(getDailyMotionId($url));
+    a(SocialVideo::getDailyMotionId($url));
 }
 
 
@@ -114,7 +114,7 @@ $mixed = array_merge($vimeo, $youtube, $dailymotion);
 
 
 foreach ($mixed as $url) {
-    $thumb = getVideoThumbnailByUrl($url);
+    $thumb = SocialVideo::getVideoThumbnailByUrl($url);
     if (false !== $thumb) {
         echo '<img src="' . $thumb . '" />';
     }
@@ -122,11 +122,6 @@ foreach ($mixed as $url) {
         echo 'not found';
     }
     echo '<br>';
-    echo getVideoLocation($url);
+    echo SocialVideo::getVideoLocation($url);
     echo '<br>';
 }
-
-
-
-
-
