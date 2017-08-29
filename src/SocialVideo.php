@@ -47,8 +47,6 @@ class SocialVideo
         if (!isset($parts['host']))
             return false;
 
-        var_dump($parts);
-
         $host = $parts['host'];
         if (
             false === strpos($host, 'youtube') &&
