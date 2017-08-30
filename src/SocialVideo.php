@@ -96,7 +96,7 @@ class SocialVideo
         $parts = parse_url($url);
 
         return !self::isSocialVideo($url)
-            && $parts && !$parts['host'];
+            && $parts && empty($parts['host']);
     }
 
     /**
