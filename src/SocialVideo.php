@@ -6,53 +6,79 @@ namespace JClaveau\SocialVideo;
  */
 class SocialVideo
 {
+    const DAILYMOTION = 'DailyMotion';
+    const VIMEO       = 'Vimeo';
+    const YOUTUBE     = 'Youtube';
+    const FACEBOOK    = 'Facebook';    // TODO support not implemented
+
+    protected static $enabledSocialNetworks = [
+        self::YOUTUBE,
+        self::DAILYMOTION,
+        self::VIMEO,
+        // self::FACEBOOK,
+    ];
+
     /**
-     * Extracts the daily motion id from a daily motion url.
-     * Returns false if the url is not recognized as a daily motion url.
+     * Checks that the social network given as parameter is enabled
+     */
+    public static function isNetworkEnabled($socialNetworkName)
+    {
+        return in_array($socialNetworkName, self::$enabledSocialNetworks);
+    }
+
+    /**
+     * Extracts the daily motion id from a daily motion url or returns null.
      */
     public static function getDailyMotionId($url)
     {
+        if (!self::isNetworkEnabled(self::DAILYMOTION))
+            return null;
+
         if (preg_match('!^.+dailymotion\.com/(video|hub)/([^_]+)[^#]*(#video=([^_&]+))?|(dai\.ly/([^_]+))!', $url, $m)) {
             if (isset($m[6])) {
                 return $m[6];
             }
+
             if (isset($m[4])) {
                 return $m[4];
             }
+
             return $m[2];
         }
-        return false;
     }
 
     /**
-     * Extracts the vimeo id from a vimeo url.
-     * Returns false if the url is not recognized as a vimeo url.
+     * Extracts the vimeo id from a vimeo url or returns null.
      */
     public static function getVimeoId($url)
     {
+        if (!self::isNetworkEnabled(self::VIMEO))
+            return null;
+
         if (preg_match('#(?:https?://)?(?:www.)?(?:player.)?vimeo.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*#', $url, $m)) {
             return $m[1];
         }
-        return false;
     }
 
     /**
-     * Extracts the youtube id from a youtube url.
-     * Returns false if the url is not recognized as a youtube url.
+     * Extracts the youtube id from a youtube url  or returns null.
      */
     public static function getYoutubeId($url)
     {
+        if (!self::isNetworkEnabled(self::YOUTUBE))
+            return null;
+
         $parts = parse_url($url);
 
         if (!isset($parts['host']))
-            return false;
+            return null;
 
         $host = $parts['host'];
         if (
             false === strpos($host, 'youtube') &&
             false === strpos($host, 'youtu.be')
         ) {
-            return false;
+            return null;
         }
 
         if (isset($parts['query'])) {
@@ -69,7 +95,8 @@ class SocialVideo
             $path = explode('/', trim($parts['path'], '/'));
             return $path[count($path) - 1];
         }
-        return false;
+
+        return null;
     }
 
     /**
@@ -79,7 +106,7 @@ class SocialVideo
      * @todo add checks mime-type or extension check?
      * @return bool
      */
-    public static function isVideoFile($url)
+    public static function isOtherUrl($url)
     {
         return !self::isSocialVideo($url)
             && (bool) parse_url($url);
@@ -91,7 +118,7 @@ class SocialVideo
      *
      * @return bool
      */
-    public static function isLocalVideoFile($url)
+    public static function isLocalUrl($url)
     {
         $parts = parse_url($url);
 
@@ -107,13 +134,11 @@ class SocialVideo
      */
     public static function isSocialVideo($url)
     {
-        return self::getVimeoId($url)
-            || self::getYoutubeId($url)
+        return self::getYoutubeId($url)
             || self::getDailyMotionId($url)
+            || self::getVimeoId($url)
             ;
     }
-
-
 
     /**
      * Gets the thumbnail url associated with an url from either:
@@ -131,7 +156,7 @@ class SocialVideo
      */
     public static function getVideoThumbnailByUrl($url, $format = 'small')
     {
-        if (false !== ($id = self::getVimeoId($url))) {
+        if ($id = self::getVimeoId($url)) {
             $hash = unserialize(file_get_contents("http://vimeo.com/api/v2/video/$id.php"));
             /**
              * thumbnail_small
@@ -140,10 +165,10 @@ class SocialVideo
              */
             return $hash[0]['thumbnail_large'];
         }
-        elseif (false !== ($id = self::getDailyMotionId($url))) {
+        elseif ($id = self::getDailyMotionId($url)) {
             return 'http://www.dailymotion.com/thumbnail/video/' . $id;
         }
-        elseif (false !== ($id = self::getYoutubeId($url))) {
+        elseif ($id = self::getYoutubeId($url)) {
             /**
              * http://img.youtube.com/vi/<insert-youtube-video-id-here>/0.jpg
              * http://img.youtube.com/vi/<insert-youtube-video-id-here>/1.jpg
@@ -161,7 +186,6 @@ class SocialVideo
             }
             return 'http://img.youtube.com/vi/' . $id . '/default.jpg';
         }
-        return false;
     }
 
     /**
@@ -201,47 +225,72 @@ class SocialVideo
      *
      * Returns false in case of failure
      */
-    public static function getEmbedVideo($url)
+    public static function getEmbedVideoHtml($url, array $optionalAttributes=null)
     {
+        $iframeAttributes = self::getEmbedIframeAttributes($url);
 
-        $code = <<<EEE
-        <style>
-            .embed-container {
-                position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;
-            }
-            .embed-container iframe, .embed-container object, .embed-container embed {
-                position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            }
-        </style>
-EEE;
-
-
-        if (false !== ($id = self::getDailyMotionId($url))) {
-            $code .= <<<EEE
-    <div class='embed-container'><iframe src='http://www.dailymotion.com/embed/video/$id' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
-EEE;
-
-        }
-        elseif (false !== ($id = self::getVimeoId($url))) {
-            $code .= <<<EEE
-    <div class='embed-container'><iframe src='http://player.vimeo.com/video/$id' frameborder='0' webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></div>
-EEE;
-        }
-        elseif (false !== ($id = self::getYoutubeId($url))) {
-            $code .= <<<EEE
-    <div class='embed-container'><iframe src='http://www.youtube.com/embed/$id' frameborder='0' allowfullscreen></iframe></div>
-EEE;
-        }
-        else if (self::isVideoFile($url)) {
-            $code .= <<<EEE
-    <div class='embed-container'><iframe src='$url' frameborder='0' controls></iframe></div>
-EEE;
-        }
-        else {
-            $code = false;
+        if (is_array($optionalAttributes)) {
+            foreach($optionalAttributes as $name => $value)
+                $iframeAttributes[$name] = $value;
         }
 
-        return $code;
+        $html = '<iframe ';
+        foreach ($iframeAttributes as $name => $value) {
+            if ($value === true)
+                $html .= $name .' ';
+            else
+                $html .= $name . '="' . $value . '" ';
+        }
+        $html .= '></iframe>';
+
+        return $html;
+    }
+
+    /**
+     * Returns the html code for an embed responsive video, for a given url.
+     * The url has to be either from:
+     * - youtube
+     * - daily motion
+     * - vimeo
+     *
+     * Returns false in case of failure
+     */
+    public static function getEmbedIframeAttributes($url)
+    {
+        if ($id = self::getDailyMotionId($url)) {
+            $attributes = [
+                'src'                   => 'http://www.dailymotion.com/embed/video/' . $id,
+                'frameborder'           => 0,
+                'webkitAllowFullScreen' => true,
+                'mozallowfullscreen'    => true,
+                'allowFullScreen'       => true,
+            ];
+        }
+        elseif ($id = self::getVimeoId($url)) {
+            $attributes = [
+                'src'                   => 'http://player.vimeo.com/video/' . $id,
+                'frameborder'           => 0,
+                'webkitAllowFullScreen' => true,
+                'mozallowfullscreen'    => true,
+                'allowFullScreen'       => true,
+            ];
+        }
+        elseif ($id = self::getYoutubeId($url)) {
+            $attributes = [
+                'src'                   => 'http://www.youtube.com/embed/' . $id,
+                'frameborder'           => 0,
+                'allowFullScreen'       => true,
+            ];
+        }
+        else if (self::isOtherUrl($url)) {
+            $attributes = [
+                'src'                   => $url,
+                'frameborder'           => 0,
+                'controls'              => true,
+            ];
+        }
+
+        return $attributes;
     }
 
     /**/
