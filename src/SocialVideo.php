@@ -2,28 +2,91 @@
 namespace JClaveau\SocialVideo;
 
 /**
- *
+ * This static class gathers tools to parse urls of videos shared through
+ * social networks.
  */
 class SocialVideo
 {
     const DAILYMOTION = 'DailyMotion';
     const VIMEO       = 'Vimeo';
     const YOUTUBE     = 'Youtube';
-    const FACEBOOK    = 'Facebook';    // TODO support not implemented
+    const FACEBOOK    = 'Facebook';
 
+    /** @var array $enabledSocialNetworks */
     protected static $enabledSocialNetworks = [
-        self::YOUTUBE,
-        self::DAILYMOTION,
-        self::VIMEO,
-        // self::FACEBOOK,
+        self::YOUTUBE     => true,
+        self::DAILYMOTION => true,
+        self::VIMEO       => true,
+        self::FACEBOOK    => null,    // TODO support not implemented
     ];
 
     /**
      * Checks that the social network given as parameter is enabled
+     *
+     * @return bool Whether or not the support of videos from the social
+     *              network is allowed.
      */
     public static function isNetworkEnabled($socialNetworkName)
     {
-        return in_array($socialNetworkName, self::$enabledSocialNetworks);
+        return !empty(
+            self::$enabledSocialNetworks[$socialNetworkName]
+        );
+    }
+
+    /**
+     * Enables the support of a social network.
+     *
+     * @param string $socialNetworkName The name of the social network
+     *                                  to enable. It's recommended to
+     *                                  use the constants of this class
+     *                                  for maintability and better
+     *                                  performances :
+     *                                      + SocialVideo::DAILYMOTION
+     *                                      + SocialVideo::YOUTUBE
+     *                                      + SocialVideo::VIMEO
+     *                                      + SocialVideo::FACEBOOK
+     *
+     * @throws InvalidArgumentException If the social network given as
+     *                                  parameter doesn't exist.
+     */
+    public static function enableNetwork($socialNetworkName)
+    {
+        if (!isset(self::$enabledSocialNetworks[$socialNetworkName])) {
+            throw new \InvalidArgumentException(
+                 "The support of the social network you try to enable is "
+                ."not implement: $socialNetworkName"
+            );
+        }
+
+        self::$enabledSocialNetworks[$socialNetworkName] = true;
+    }
+
+    /**
+     * Disables the support of a social network.
+     *
+     * @param string $socialNetworkName The name of the social network
+     *                                  to disable. It's recommended to
+     *                                  use the constants of this class
+     *                                  for maintability and better
+     *                                  performances :
+     *                                      + SocialVideo::DAILYMOTION
+     *                                      + SocialVideo::YOUTUBE
+     *                                      + SocialVideo::VIMEO
+     *                                      + SocialVideo::FACEBOOK
+     *
+     * @throws InvalidArgumentException If the social network given as
+     *                                  parameter doesn't exist.
+     */
+    public static function disableNetwork($socialNetworkName)
+    {
+        if (!isset(self::$enabledSocialNetworks[$socialNetworkName])) {
+            throw new \InvalidArgumentException(
+                 "The support of the social network you try to enable is "
+                ."not implement: $socialNetworkName"
+            );
+        }
+
+        self::$enabledSocialNetworks[$socialNetworkName] = false;
     }
 
     /**
@@ -100,6 +163,19 @@ class SocialVideo
     }
 
     /**
+     * Extracts the facebook id from a facebook url of a video or returns
+     * null.
+     *
+     */
+    public static function getFacebookId($url)
+    {
+        if (!self::isNetworkEnabled(self::FACEBOOK))
+            return null;
+
+        throw new \ErrorException("Facebook support not implemented yet");
+    }
+
+    /**
      * Returns true if the url is valid which means it could be a simple
      * video file uploaded somewhere.
      *
@@ -131,6 +207,8 @@ class SocialVideo
      * video file uploaded somewhere.
      *
      * @todo add checks mime-type check?
+     *
+     * @return bool
      */
     public static function isSocialVideo($url)
     {
@@ -190,13 +268,16 @@ class SocialVideo
 
     /**
      * Returns the location of the actual video for a given url which belongs to either:
-     *
      *      - youtube
      *      - daily motion
      *      - vimeo
      *
-     * Or returns false in case of failure.
      * This function can be used for creating video sitemaps.
+     *
+     * @throws InvalidArgumentException If the $url parameter cannot be
+     *                                  parsed.
+     *
+     * @return string The url of an embeded video in an iframe
      */
     public static function getVideoLocation($url)
     {
@@ -209,11 +290,13 @@ class SocialVideo
         elseif (false !== ($id = self::getYoutubeId($url))) {
             return 'http://www.youtube.com/embed/' . $id;
         }
-        else if (self::isVideoFile($url)) {
+        else if (self::isOtherUrl($url)) {
             return $url;
         }
-
-        return false;
+        else {
+            throw new \InvalidArgumentException("The $url parameter"
+                ." doesn't seem to ve a valid URL" );
+        }
     }
 
     /**
@@ -223,7 +306,6 @@ class SocialVideo
      * - daily motion
      * - vimeo
      *
-     * Returns false in case of failure
      */
     public static function getEmbedVideoHtml($url, array $optionalAttributes=null)
     {
@@ -247,22 +329,53 @@ class SocialVideo
     }
 
     /**
-     * Returns the html code for an embed responsive video, for a given url.
-     * The url has to be either from:
-     * - youtube
-     * - daily motion
-     * - vimeo
+     * Generates the iframe attributes corresponding to a video URL.
      *
-     * Returns false in case of failure
+     * @param  string $url              The $url of the video to embed.
+     * @throws InvalidArgumentException If the $url parameter cannot be
+     *                                  parsed.
+     *
+     * @return array The HTML attributes for the iframe element.
+     *
+     * @todo   facebook
      */
     public static function getEmbedIframeAttributes($url)
     {
-        if ($id = self::getDailyMotionId($url)) {
+        if ($id = self::getYoutubeId($url)) {
+            $attributes = [
+                'src'                   => 'http://www.youtube.com/embed/' . $id,
+                'frameborder'           => 0,
+                'allowFullScreen'       => true,
+            ];
+        }
+        elseif ($id = self::getDailyMotionId($url)) {
             $attributes = [
                 'src'                   => 'http://www.dailymotion.com/embed/video/' . $id,
                 'frameborder'           => 0,
                 'webkitAllowFullScreen' => true,
                 'mozallowfullscreen'    => true,
+                'allowFullScreen'       => true,
+            ];
+        }
+        elseif ($id = self::getFacebookId($url)) {
+
+            // <iframe
+            //      src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjfprovencal%2Fvideos%2F1702184380077620%2F&show_text=0&width=560"
+            //      width="560" height="315"
+            //      style="border:none;overflow:hidden"
+            //      scrolling="no"
+            //      frameborder="0"
+            //      allowTransparency="true"
+            //      allowFullScreen="true"
+            //      >
+            // </iframe>
+
+            $attributes = [
+                'src'                   => 'https://www.facebook.com/plugins/video.php?href=' . $id,
+                'frameborder'           => 0,
+                'scrolling'             => "no",
+                'style'                 => "border: none; overflow: hidden",
+                'allowTransparency'     => true,
                 'allowFullScreen'       => true,
             ];
         }
@@ -275,19 +388,16 @@ class SocialVideo
                 'allowFullScreen'       => true,
             ];
         }
-        elseif ($id = self::getYoutubeId($url)) {
-            $attributes = [
-                'src'                   => 'http://www.youtube.com/embed/' . $id,
-                'frameborder'           => 0,
-                'allowFullScreen'       => true,
-            ];
-        }
         else if (self::isOtherUrl($url)) {
             $attributes = [
                 'src'                   => $url,
                 'frameborder'           => 0,
                 'controls'              => true,
             ];
+        }
+        else {
+            throw new \InvalidArgumentException("The $url parameter"
+                ." doesn't seem to ve a valid URL" );
         }
 
         return $attributes;
