@@ -301,11 +301,14 @@ class SocialVideo
 
     /**
      * Returns the html code for an embed responsive video, for a given url.
-     * The url has to be either from:
-     * - youtube
-     * - daily motion
-     * - vimeo
+     * The url has to be either from a enabled social network.
      *
+     * @todo   Use video element for mp4?
+     *
+     * @param  string $url                The url of the video
+     * @param  array  $optionalAttributes The attributes to add to the element.
+     *
+     * @return string The html element.
      */
     public static function getEmbedVideoHtml($url, array $optionalAttributes=null)
     {

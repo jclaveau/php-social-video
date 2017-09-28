@@ -24,4 +24,7 @@ Related
 
 Todo
 --------------
-- Use PHPUnit for tests
+- Implement Facebook videos support
+- video element for local videos
+- Make the testing exhaustive
+- Documentation
