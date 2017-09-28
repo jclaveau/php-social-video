@@ -1,25 +1,18 @@
-Video ids and thumbnails
+Video ids and thumbnails from Youtube, DailyMotion, Vimeo and Facebook
 =============================
-2017-08-29 (Based on the work of lingtalfi [video-ids-and-thumbnails](https://github.com/lingtalfi/video-ids-and-thumbnails))
+
+This simple class provides helpers to extract information from URLs of
+videos, draws embed videos from it, get thumbnails urls and checks from
+which social network they come from.
+
+All those helpers are stored in [SocialVideo.php]
 
 
-
-The php class I use to get the video ids and thumbnails from youtube, vimeo and dailymotion.
-
-
-The functions are in the [SocialVideo.php] file.
-
-
-I also wrote some pre-tests to showcase the functions.
-Those pre-tests are in the [testvideo.php] file.
-
-
-
-Related
+Supported social networks
 --------------
-
-- [YouTubeUtils](https://github.com/lingtalfi/YouTubeUtils)
-- [video-ids-and-thumbnails](https://github.com/lingtalfi/video-ids-and-thumbnails)
+- Youtube
+- DailyMotion
+- Vimeo
 
 
 Todo
@@ -28,3 +21,11 @@ Todo
 - video element for local videos
 - Make the testing exhaustive
 - Documentation
+- packagist
+- [code quality badges](https://github.com/dwyl/repo-badges)
+
+
+Related
+--------------
+- Based on [video-ids-and-thumbnails](https://github.com/lingtalfi/video-ids-and-thumbnails)
+- [YouTubeUtils](https://github.com/lingtalfi/YouTubeUtils)

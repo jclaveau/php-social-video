@@ -1,8 +1,6 @@
 <?php
 use JClaveau\SocialVideo\SocialVideo;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 class SocialVideoTest extends PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
