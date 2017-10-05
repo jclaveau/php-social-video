@@ -9,6 +9,15 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the check of the enabling of a social network support
+     */
+    public function test_isNetworkEnabled()
+    {
+        $result = SocialVideo::isNetworkEnabled( SocialVideo::YOUTUBE );
+        $this->assertTrue($result);
+    }
+
+    /**
      * Set of arguments for test_getVimeoId().
      *
      * @return array The parameters

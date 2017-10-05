@@ -11,6 +11,7 @@ class SocialVideo
     const VIMEO       = 'Vimeo';
     const YOUTUBE     = 'Youtube';
     const FACEBOOK    = 'Facebook';
+    const TWITCH      = 'Twitch';
 
     /** @var array $enabledSocialNetworks */
     protected static $enabledSocialNetworks = [
@@ -18,6 +19,7 @@ class SocialVideo
         self::DAILYMOTION => true,
         self::VIMEO       => true,
         self::FACEBOOK    => null,    // TODO support not implemented
+        self::TWITCH      => null,    // TODO support not implemented
     ];
 
     /**
@@ -91,40 +93,55 @@ class SocialVideo
 
     /**
      * Extracts the daily motion id from a daily motion url or returns null.
+     *
+     * @param  string $url
+     * @return string|null The id
      */
     public static function getDailyMotionId($url)
     {
         if (!self::isNetworkEnabled(self::DAILYMOTION))
             return null;
 
-        if (preg_match('!^.+dailymotion\.com/(video|hub)/([^_]+)[^#]*(#video=([^_&]+))?|(dai\.ly/([^_]+))!', $url, $m)) {
-            if (isset($m[6])) {
-                return $m[6];
+        if ( preg_match(
+            '!^.+dailymotion\.com/(video|hub)/([^_]+)[^#]*(#video=([^_&]+))?|(dai\.ly/([^_]+))!',
+            $url, $matches
+        )) {
+            if (isset($matches[6])) {
+                return $matches[6];
             }
 
-            if (isset($m[4])) {
-                return $m[4];
+            if (isset($matches[4])) {
+                return $matches[4];
             }
 
-            return $m[2];
+            return $matches[2];
         }
     }
 
     /**
      * Extracts the vimeo id from a vimeo url or returns null.
+     *
+     * @param  string $url
+     * @return string|null The id
      */
     public static function getVimeoId($url)
     {
         if (!self::isNetworkEnabled(self::VIMEO))
             return null;
 
-        if (preg_match('#(?:https?://)?(?:www.)?(?:player.)?vimeo.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*#', $url, $m)) {
-            return $m[1];
+        if ( preg_match(
+            '#(?:https?://)?(?:www.)?(?:player.)?vimeo.com/(?:[a-z]*/)*([0-9]{6,11})[?]?.*#',
+            $url, $matches
+        )) {
+            return $matches[1];
         }
     }
 
     /**
      * Extracts the youtube id from a youtube url  or returns null.
+     *
+     * @param  string $url
+     * @return string|null The id
      */
     public static function getYoutubeId($url)
     {
@@ -166,6 +183,10 @@ class SocialVideo
      * Extracts the facebook id from a facebook url of a video or returns
      * null.
      *
+     * @todo not implemented
+     *
+     * @param  string $url
+     * @return string|null The id
      */
     public static function getFacebookId($url)
     {
