@@ -18,8 +18,15 @@
             "JClaveau\\SocialVideo\\" : "src"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/jclaveau/php-visibility-violator"
+        }
+    ],
     "require-dev": {
-        "phpunit/phpunit": "4.8.*"
+        "phpunit/phpunit": "4.8.*",
+        "jclaveau/php-visibility-violator": "dev-master"
     },
     "require": {
         "php": ">=5.4.0"

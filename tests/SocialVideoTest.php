@@ -1,5 +1,6 @@
 <?php
 use JClaveau\SocialVideo\SocialVideo;
+use JClaveau\VisibilityViolator\VisibilityViolator;
 
 class SocialVideoTest extends PHPUnit_Framework_TestCase
 {
@@ -13,8 +14,17 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      */
     public function test_isNetworkEnabled()
     {
-        $result = SocialVideo::isNetworkEnabled( SocialVideo::YOUTUBE );
-        $this->assertTrue($result);
+        SocialVideo::enableNetwork( SocialVideo::YOUTUBE );
+
+        $this->assertTrue(
+            SocialVideo::isNetworkEnabled( SocialVideo::YOUTUBE )
+        );
+
+        SocialVideo::disableNetwork( SocialVideo::VIMEO );
+
+        $this->assertFalse(
+            SocialVideo::isNetworkEnabled( SocialVideo::VIMEO )
+        );
     }
 
     /**
