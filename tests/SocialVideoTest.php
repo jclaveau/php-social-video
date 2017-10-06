@@ -63,6 +63,12 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
                 'http://vimeo.com/87973054',
                 'http://vimeo.com/channels/vimeogirls/87973054',
             ],
+            null => [
+                'http://vimeo.com/videoschool',
+                'http://vimeo.com/videoschool/archive/behind_the_scenes',
+                'http://vimeo.com/forums/screening_room',
+                'http://vimeo.com/forums/screening_room/topic:42708',
+            ],
         ],
         SocialVideo::DAILYMOTION => [
             'x2jvvep' => [
@@ -274,43 +280,6 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     {
         $id = SocialVideo::getVimeoId($url);
         $this->assertEquals($expected_id, $id);
-    }
-
-    /**
-     * Set of arguments for test_getVimeoId().
-     *
-     * @return array The parameters
-     */
-    public function test_getVimeoId_failing_dataProvider()
-    {
-        $urls = [
-            'http://vimeo.com/videoschool',
-            'http://vimeo.com/videoschool/archive/behind_the_scenes',
-            'http://vimeo.com/forums/screening_room',
-            'http://vimeo.com/forums/screening_room/topic:42708',
-        ];
-
-        $test_parameters = [];
-        foreach ($urls as $url) {
-            $test_parameters[] = [
-                $url
-            ];
-        }
-
-        return $test_parameters;
-    }
-
-    /**
-     * Test some failing extractions of ids from Vimeo urls.
-     *
-     * @param string An invalid Vimeo URL
-     *
-     * @dataProvider test_getVimeoId_failing_dataProvider
-     */
-    public function test_getVimeoId_failing($url)
-    {
-        $id = SocialVideo::getVimeoId($url);
-        $this->assertEquals(null, $id);
     }
 
     /**
