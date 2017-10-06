@@ -4,9 +4,92 @@ use JClaveau\VisibilityViolator\VisibilityViolator;
 
 class SocialVideoTest extends PHPUnit_Framework_TestCase
 {
+    protected $allNetworks = [
+        SocialVideo::DAILYMOTION,
+        SocialVideo::FACEBOOK,
+        SocialVideo::YOUTUBE,
+        SocialVideo::TWITCH,
+        SocialVideo::VIMEO,
+    ];
+
+    protected $validUrls = [
+        SocialVideo::YOUTUBE => [
+            'nCwRJUg3tcQ' => [
+                "https://www.youtube.com/watch?v=nCwRJUg3tcQ&list=PLv5BUbwWA5RYaM6E-QiE8WxoKwyBnozV2&index=4",
+                "http://www.youtube.com/watch?v=nCwRJUg3tcQ&feature=relate",
+                'http://youtube.com/v/nCwRJUg3tcQ?feature=youtube_gdata_player',
+                'http://youtube.com/vi/nCwRJUg3tcQ?feature=youtube_gdata_player',
+                'http://youtube.com/?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
+                'http://www.youtube.com/watch?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
+                'http://youtube.com/?vi=nCwRJUg3tcQ&feature=youtube_gdata_player',
+                'http://youtube.com/watch?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
+                'http://youtube.com/watch?vi=nCwRJUg3tcQ&feature=youtube_gdata_player',
+                'http://youtu.be/nCwRJUg3tcQ?feature=youtube_gdata_player',
+                "https://youtube.com/v/nCwRJUg3tcQ",
+                "https://youtube.com/vi/nCwRJUg3tcQ",
+                "https://youtube.com/?v=nCwRJUg3tcQ",
+                "https://youtube.com/?vi=nCwRJUg3tcQ",
+                "https://youtube.com/watch?v=nCwRJUg3tcQ",
+                "https://youtube.com/watch?vi=nCwRJUg3tcQ",
+                "https://youtu.be/nCwRJUg3tcQ",
+                "http://youtu.be/nCwRJUg3tcQ?t=30m26s",
+                "https://youtube.com/v/nCwRJUg3tcQ",
+                "https://youtube.com/vi/nCwRJUg3tcQ",
+                "https://youtube.com/?v=nCwRJUg3tcQ",
+                "https://youtube.com/?vi=nCwRJUg3tcQ",
+                "https://youtube.com/watch?v=nCwRJUg3tcQ",
+                "https://youtube.com/watch?vi=nCwRJUg3tcQ",
+                "https://youtu.be/nCwRJUg3tcQ",
+                "https://youtube.com/embed/nCwRJUg3tcQ",
+                "http://youtube.com/v/nCwRJUg3tcQ",
+                "http://www.youtube.com/v/nCwRJUg3tcQ",
+                "https://www.youtube.com/v/nCwRJUg3tcQ",
+                "https://youtube.com/watch?v=nCwRJUg3tcQ&wtv=wtv",
+                "http://www.youtube.com/watch?dev=inprogress&v=nCwRJUg3tcQ&feature=related"
+            ],
+        ],
+        SocialVideo::VIMEO => [
+            '87973054' => [
+                'https://vimeo.com/87973054',
+                'http://vimeo.com/87973054',
+                'http://vimeo.com/87973054',
+                'http://player.vimeo.com/video/87973054?title=0&amp;byline=0&amp;portrait=0',
+                'http://player.vimeo.com/video/87973054',
+                'http://player.vimeo.com/video/87973054',
+                'http://player.vimeo.com/video/87973054?title=0&amp;byline=0&amp;portrait=0',
+                'http://vimeo.com/channels/vimeogirls/87973054',
+                'http://vimeo.com/channels/vimeogirls/87973054',
+                'http://vimeo.com/channels/staffpicks/87973054',
+                'http://vimeo.com/87973054',
+                'http://vimeo.com/channels/vimeogirls/87973054',
+            ],
+        ],
+        SocialVideo::DAILYMOTION => [
+            'x2jvvep' => [
+                'http://www.dailymotion.com/video/x2jvvep_coup-incroyable-pendant-un-match-de-ping-pong_tv',
+                'http://www.dailymotion.com/video/x2jvvep_rates-of-exchange-like-a-renegade_music',
+                'http://www.dailymotion.com/video/x2jvvep',
+                'http://www.dailymotion.com/hub/x2jvvep_Galatasaray',
+                'http://www.dailymotion.com/hub/x2jvvep_Galatasaray#video=x2jvvep',
+                'http://www.dailymotion.com/video/x2jvvep_hakan-yukur-klip_sport',
+                'http://dai.ly/x2jvvep',
+            ],
+        ],
+        SocialVideo::FACEBOOK => [
+            '1833607506657400' => [
+                'https://www.facebook.com/unjouruncochon/videos/1833607506657400/',
+            ],
+        ],
+        SocialVideo::TWITCH => [
+        ],
+    ];
+
+
+
     public static function setUpBeforeClass()
     {
         //
+        // ini_set('xdebug.max_nesting_level', 10000);
     }
 
     /**
@@ -144,35 +227,40 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Prepare sets of test parameters for id retrieval methods.
+     *
+     * @param  string The name of the tested social network
+     * @return array  The parameters
+     */
+    public function combineTestUrlsFor($socialNetworkName)
+    {
+        $test_parameters_sets = [];
+
+        foreach ($this->validUrls[ $socialNetworkName ] as $expected_id => $urls) {
+            foreach ($urls as $url)
+                $test_parameters_sets[] = [$url, $expected_id];
+        }
+
+        $others_networks = array_diff($this->allNetworks, [$socialNetworkName]);
+
+        foreach ($others_networks as $others_network) {
+            foreach ($this->validUrls[ $others_network ] as $expected_id => $urls) {
+                foreach ($urls as $url)
+                    $test_parameters_sets[] = [$url, null];
+            }
+        }
+
+        return $test_parameters_sets;
+    }
+
+    /**
      * Set of arguments for test_getVimeoId().
      *
      * @return array The parameters
      */
     public function test_getVimeoId_dataProvider()
     {
-        $urls = [
-            'https://vimeo.com/87973054',
-            'http://vimeo.com/87973054',
-            'http://vimeo.com/87973054',
-            'http://player.vimeo.com/video/87973054?title=0&amp;byline=0&amp;portrait=0',
-            'http://player.vimeo.com/video/87973054',
-            'http://player.vimeo.com/video/87973054',
-            'http://player.vimeo.com/video/87973054?title=0&amp;byline=0&amp;portrait=0',
-            'http://vimeo.com/channels/vimeogirls/87973054',
-            'http://vimeo.com/channels/vimeogirls/87973054',
-            'http://vimeo.com/channels/staffpicks/87973054',
-            'http://vimeo.com/87973054',
-            'http://vimeo.com/channels/vimeogirls/87973054',
-        ];
-
-        $test_parameters = [];
-        foreach ($urls as $url) {
-            $test_parameters[] = [
-                $url
-            ];
-        }
-
-        return $test_parameters;
+        return $this->combineTestUrlsFor( SocialVideo::VIMEO );
     }
 
     /**
@@ -182,10 +270,10 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      *
      * @dataProvider test_getVimeoId_dataProvider
      */
-    public function test_getVimeoId($url)
+    public function test_getVimeoId($url, $expected_id)
     {
         $id = SocialVideo::getVimeoId($url);
-        $this->assertEquals('87973054', $id);
+        $this->assertEquals($expected_id, $id);
     }
 
     /**
@@ -232,48 +320,7 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      */
     public function test_getYoutubeId_dataProvider()
     {
-        $urls = [
-            "https://www.youtube.com/watch?v=nCwRJUg3tcQ&list=PLv5BUbwWA5RYaM6E-QiE8WxoKwyBnozV2&index=4",
-            "http://www.youtube.com/watch?v=nCwRJUg3tcQ&feature=relate",
-            'http://youtube.com/v/nCwRJUg3tcQ?feature=youtube_gdata_player',
-            'http://youtube.com/vi/nCwRJUg3tcQ?feature=youtube_gdata_player',
-            'http://youtube.com/?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
-            'http://www.youtube.com/watch?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
-            'http://youtube.com/?vi=nCwRJUg3tcQ&feature=youtube_gdata_player',
-            'http://youtube.com/watch?v=nCwRJUg3tcQ&feature=youtube_gdata_player',
-            'http://youtube.com/watch?vi=nCwRJUg3tcQ&feature=youtube_gdata_player',
-            'http://youtu.be/nCwRJUg3tcQ?feature=youtube_gdata_player',
-            "https://youtube.com/v/nCwRJUg3tcQ",
-            "https://youtube.com/vi/nCwRJUg3tcQ",
-            "https://youtube.com/?v=nCwRJUg3tcQ",
-            "https://youtube.com/?vi=nCwRJUg3tcQ",
-            "https://youtube.com/watch?v=nCwRJUg3tcQ",
-            "https://youtube.com/watch?vi=nCwRJUg3tcQ",
-            "https://youtu.be/nCwRJUg3tcQ",
-            "http://youtu.be/nCwRJUg3tcQ?t=30m26s",
-            "https://youtube.com/v/nCwRJUg3tcQ",
-            "https://youtube.com/vi/nCwRJUg3tcQ",
-            "https://youtube.com/?v=nCwRJUg3tcQ",
-            "https://youtube.com/?vi=nCwRJUg3tcQ",
-            "https://youtube.com/watch?v=nCwRJUg3tcQ",
-            "https://youtube.com/watch?vi=nCwRJUg3tcQ",
-            "https://youtu.be/nCwRJUg3tcQ",
-            "https://youtube.com/embed/nCwRJUg3tcQ",
-            "http://youtube.com/v/nCwRJUg3tcQ",
-            "http://www.youtube.com/v/nCwRJUg3tcQ",
-            "https://www.youtube.com/v/nCwRJUg3tcQ",
-            "https://youtube.com/watch?v=nCwRJUg3tcQ&wtv=wtv",
-            "http://www.youtube.com/watch?dev=inprogress&v=nCwRJUg3tcQ&feature=related"
-        ];
-
-        $test_parameters = [];
-        foreach ($urls as $url) {
-            $test_parameters[] = [
-                $url
-            ];
-        }
-
-        return $test_parameters;
+        return $this->combineTestUrlsFor( SocialVideo::YOUTUBE );
     }
 
     /**
@@ -283,10 +330,10 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      *
      * @dataProvider test_getYoutubeId_dataProvider
      */
-    public function test_getYoutubeId($url)
+    public function test_getYoutubeId($url, $expected_id)
     {
         $id = SocialVideo::getYoutubeId($url);
-        $this->assertEquals('nCwRJUg3tcQ', $id);
+        $this->assertEquals($expected_id, $id);
     }
 
     /**
@@ -296,24 +343,7 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      */
     public function test_getDailyMotionId_dataProvider()
     {
-        $urls = [
-            'http://www.dailymotion.com/video/x2jvvep_coup-incroyable-pendant-un-match-de-ping-pong_tv',
-            'http://www.dailymotion.com/video/x2jvvep_rates-of-exchange-like-a-renegade_music',
-            'http://www.dailymotion.com/video/x2jvvep',
-            'http://www.dailymotion.com/hub/x2jvvep_Galatasaray',
-            'http://www.dailymotion.com/hub/x2jvvep_Galatasaray#video=x2jvvep',
-            'http://www.dailymotion.com/video/x2jvvep_hakan-yukur-klip_sport',
-            'http://dai.ly/x2jvvep',
-        ];
-
-        $test_parameters = [];
-        foreach ($urls as $url) {
-            $test_parameters[] = [
-                $url
-            ];
-        }
-
-        return $test_parameters;
+        return $this->combineTestUrlsFor( SocialVideo::DAILYMOTION );
     }
 
     /**
@@ -323,10 +353,10 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      *
      * @dataProvider test_getDailyMotionId_dataProvider
      */
-    public function test_getDailyMotionId($url)
+    public function test_getDailyMotionId($url, $expected_id)
     {
         $id = SocialVideo::getDailyMotionId($url);
-        $this->assertEquals('x2jvvep', $id);
+        $this->assertEquals($expected_id, $id);
     }
 
     /**
@@ -336,18 +366,7 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      */
     public function test_getFacebookId_dataProvider()
     {
-        $urls = [
-            'https://www.facebook.com/unjouruncochon/videos/1833607506657400/',
-        ];
-
-        $test_parameters = [];
-        foreach ($urls as $url) {
-            $test_parameters[] = [
-                $url
-            ];
-        }
-
-        return $test_parameters;
+        return $this->combineTestUrlsFor( SocialVideo::FACEBOOK );
     }
 
     /**
@@ -359,12 +378,12 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      *
      * @dataProvider test_getFacebookId_dataProvider
      */
-    public function test_getFacebookId($url)
+    public function test_getFacebookId($url, $expected_id)
     {
         SocialVideo::enableNetwork( SocialVideo::FACEBOOK );
         // $this->expectException( InvalidArgumentException::class );
         $id = SocialVideo::getFacebookId($url);
-        // $this->assertEquals('1833607506657400', $id);
+        $this->assertEquals($expected_id, $id);
     }
 
     /**
