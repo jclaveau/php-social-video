@@ -4,6 +4,8 @@ namespace JClaveau\SocialVideo;
 /**
  * This static class gathers tools to parse urls of videos shared through
  * social networks.
+ *
+ * @todo rename as SocialVideoHelpers in opposition to instanciable social video.
  */
 class SocialVideo
 {
@@ -21,6 +23,16 @@ class SocialVideo
         self::FACEBOOK    => null,    // TODO support not implemented
         self::TWITCH      => null,    // TODO support not implemented
     ];
+
+    /**
+     * Lists all the networks known by this api.
+     *
+     * @return array
+     */
+    public static function listKnownNetworks()
+    {
+        return array_keys(self::$enabledSocialNetworks);
+    }
 
     /**
      * Checks that the social network given as parameter is enabled

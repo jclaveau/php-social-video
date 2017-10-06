@@ -4,14 +4,6 @@ use JClaveau\VisibilityViolator\VisibilityViolator;
 
 class SocialVideoTest extends PHPUnit_Framework_TestCase
 {
-    protected $allNetworks = [
-        SocialVideo::DAILYMOTION,
-        SocialVideo::FACEBOOK,
-        SocialVideo::YOUTUBE,
-        SocialVideo::TWITCH,
-        SocialVideo::VIMEO,
-    ];
-
     protected $validUrls = [
         SocialVideo::YOUTUBE => [
             'nCwRJUg3tcQ' => [
@@ -88,6 +80,15 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
         SocialVideo::FACEBOOK => [
             '1833607506657400' => [
                 'https://www.facebook.com/unjouruncochon/videos/1833607506657400/',
+                'http://www.facebook.com/unjouruncochon/videos/1833607506657400/',
+            ],
+            '10156384500276729' => [
+                'https://www.facebook.com/facebook/videos/10156384500276729/',
+            ],
+            '1702184380077620' => [ // embeded
+                'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fjfprovencal%2Fvideos%2F1702184380077620%2F&show_text=0&width=560',
+                'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Flalalalala%2Fvideos%2F1702184380077620',
+                'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.lololo.com%2Flalalalala%2Fvideos%2F1702184380077620',
             ],
         ],
         SocialVideo::TWITCH => [
@@ -251,7 +252,10 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
                 $test_parameters_sets[] = [$url, $expected_id];
         }
 
-        $others_networks = array_diff($this->allNetworks, [$socialNetworkName]);
+        $others_networks = array_diff(
+            SocialVideo::listKnownNetworks(),
+            [$socialNetworkName]
+        );
 
         foreach ($others_networks as $others_network) {
             foreach ($this->validUrls[ $others_network ] as $expected_id => $urls) {
