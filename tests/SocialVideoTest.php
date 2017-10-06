@@ -47,6 +47,10 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
                 "https://youtube.com/watch?v=nCwRJUg3tcQ&wtv=wtv",
                 "http://www.youtube.com/watch?dev=inprogress&v=nCwRJUg3tcQ&feature=related"
             ],
+            null => [
+                'http://www.youtube.com',
+                'https://www.youtube.com',
+            ],
         ],
         SocialVideo::VIMEO => [
             '87973054' => [
