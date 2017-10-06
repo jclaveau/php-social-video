@@ -48,13 +48,14 @@ class SocialVideo
      *                                      + SocialVideo::VIMEO
      *                                      + SocialVideo::FACEBOOK
      *
-     * @throws InvalidArgumentException If the social network given as
-     *                                  parameter doesn't exist.
+     * @throws NotImplementedException  If the social network given as
+     *                                  parameter doesn't exist or is not
+     *                                  supported yet.
      */
     public static function enableNetwork($socialNetworkName)
     {
         if (!isset(self::$enabledSocialNetworks[$socialNetworkName])) {
-            throw new \InvalidArgumentException(
+            throw new NotImplementedException(
                  "The support of the social network you try to enable is "
                 ."not implement: $socialNetworkName"
             );
@@ -82,7 +83,7 @@ class SocialVideo
     public static function disableNetwork($socialNetworkName)
     {
         if (!isset(self::$enabledSocialNetworks[$socialNetworkName])) {
-            throw new \InvalidArgumentException(
+            throw new NotImplementedException(
                  "The support of the social network you try to enable is "
                 ."not implement: $socialNetworkName"
             );

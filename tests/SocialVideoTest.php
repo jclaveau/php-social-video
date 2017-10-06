@@ -10,6 +10,122 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the the enabling of a social network support
+     */
+    public function test_enableNetwork()
+    {
+        $saved = VisibilityViolator::getHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks'
+        );
+
+        // not implemented
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            [
+                SocialVideo::DAILYMOTION => null,
+            ]
+        );
+
+        try {
+            SocialVideo::enableNetwork( SocialVideo::DAILYMOTION );
+        }
+        catch (\JClaveau\SocialVideo\NotImplementedException $e) {
+            $this->assertEquals(
+                $e->getMessage(),
+                "The support of the social network you try to enable is "
+                ."not implement: ".SocialVideo::DAILYMOTION
+            );
+        }
+
+        // disabled
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            [
+                SocialVideo::DAILYMOTION => false,
+            ]
+        );
+
+        SocialVideo::enableNetwork( SocialVideo::DAILYMOTION );
+
+        $enabledSocialNetworks = VisibilityViolator::getHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks'
+        );
+
+        $this->assertEquals( $enabledSocialNetworks, [
+            SocialVideo::DAILYMOTION => true,
+        ]);
+
+        // restore
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            $saved
+        );
+    }
+
+    /**
+     * Test the the disabling of a social network support
+     */
+    public function test_disableNetwork()
+    {
+        $saved = VisibilityViolator::getHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks'
+        );
+
+        // not implemented
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            [
+                SocialVideo::DAILYMOTION => null,
+            ]
+        );
+
+        try {
+            SocialVideo::disableNetwork( SocialVideo::DAILYMOTION );
+        }
+        catch (\JClaveau\SocialVideo\NotImplementedException $e) {
+            $this->assertEquals(
+                $e->getMessage(),
+                "The support of the social network you try to enable is "
+                ."not implement: ".SocialVideo::DAILYMOTION
+            );
+        }
+
+        // enabled
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            [
+                SocialVideo::DAILYMOTION => true,
+            ]
+        );
+
+        SocialVideo::disableNetwork( SocialVideo::DAILYMOTION );
+
+        $enabledSocialNetworks = VisibilityViolator::getHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks'
+        );
+
+        $this->assertEquals( $enabledSocialNetworks, [
+            SocialVideo::DAILYMOTION => false,
+        ]);
+
+        // restore
+        VisibilityViolator::setHiddenProperty(
+            'JClaveau\SocialVideo\SocialVideo',
+            'enabledSocialNetworks',
+            $saved
+        );
+    }
+
+    /**
      * Test the check of the enabling of a social network support
      */
     public function test_isNetworkEnabled()
@@ -239,7 +355,7 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
      *
      * @param string An example Facebook URL
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException \JClaveau\SocialVideo\NotImplementedException
      *
      * @dataProvider test_getFacebookId_dataProvider
      */
