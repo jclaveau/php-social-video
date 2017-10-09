@@ -92,6 +92,9 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
             ],
         ],
         SocialVideo::TWITCH => [
+            '179009798' => [
+                'https://m.twitch.tv/videos/179009798'
+            ],
         ],
     ];
 

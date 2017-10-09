@@ -14,6 +14,7 @@ class SocialVideo
     const YOUTUBE     = 'Youtube';
     const FACEBOOK    = 'Facebook';
     const TWITCH      = 'Twitch';
+    const KOREUS      = 'Koreus';
 
     /** @var array $enabledSocialNetworks */
     protected static $enabledSocialNetworks = [
@@ -338,6 +339,7 @@ class SocialVideo
      * The url has to be either from a enabled social network.
      *
      * @todo   Use video element for mp4?
+     * @todo <iframe width="560" height="315" src="https://www.koreus.com/embed/anaplaying-cheveux-feu-live"  frameborder="0" allowfullscreen></iframe><br /><a href="https://www.koreus.com/video/anaplaying-cheveux-feu-live.html">AnaPlaying se brule les cheveux pendant un live Twitch</a> - <a href="https://www.koreus.com/">Streaming</a>
      *
      * @param  string $url                The url of the video
      * @param  array  $optionalAttributes The attributes to add to the element.
