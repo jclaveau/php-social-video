@@ -11,7 +11,7 @@ Quality
 --------------
 [![Build Status](https://travis-ci.org/jclaveau/php-social-video.png?branch=master)](https://travis-ci.org/jclaveau/php-social-video)
 [![codecov](https://codecov.io/gh/jclaveau/php-social-video/branch/master/graph/badge.svg)](https://codecov.io/gh/jclaveau/php-social-video)
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/75c89e5e61ab58d5fc71/maintainability)](https://codeclimate.com/github/jclaveau/php-social-video/maintainability)
 
 
 Supported social networks
