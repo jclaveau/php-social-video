@@ -10,6 +10,8 @@ All those helpers are stored in [SocialVideo.php](https://github.com/jclaveau/ph
 Quality
 --------------
 [![Build Status](https://travis-ci.org/jclaveau/php-social-video.png?branch=master)](https://travis-ci.org/jclaveau/php-social-video)
+[![codecov](https://codecov.io/gh/jclaveau/php-social-video/branch/master/graph/badge.svg)](https://codecov.io/gh/jclaveau/php-social-video)
+
 
 
 Supported social networks
