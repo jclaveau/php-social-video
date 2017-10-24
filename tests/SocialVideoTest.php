@@ -367,6 +367,148 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Extracts all urls related to an non null expected_id.
+     *
+     * @return array The parameters
+     */
+    public function validUrlsParameterSet()
+    {
+        $test_parameters_sets = [];
+
+        foreach (SocialVideo::listEnabledNetworks() as $socialNetworkName) {
+                
+            foreach ($this->validUrls[ $socialNetworkName ] as $expectedId => $urls) {
+                if (!$expectedId) 
+                    continue;
+                
+                foreach ($urls as $url)
+                    $test_parameters_sets[] = [$url];
+            }
+
+        }
+            
+        return $test_parameters_sets;
+    }
+
+    /**
+     * Checks that videos are considered as coming from a social network.
+     *
+     * @param string An url of a video stored on a social network.
+     *
+     * @dataProvider validUrlsParameterSet
+     */
+    public function test_isSocialVideo($url)
+    {
+        $this->assertEquals(true, SocialVideo::isSocialVideo($url));
+    }
+
+    /**
+     * Checks that videos are considered as coming from a social network.
+     *
+     * @param string An url of a video stored on a social network.
+     */
+    public function test_isLocalUrl()
+    {
+        foreach ($this->validUrlsParameterSet() as $parameterSet)
+            $this->assertEquals(false, SocialVideo::isLocalUrl($parameterSet[0]));
+        
+        $this->assertEquals(false, SocialVideo::isLocalUrl(
+            'https://www.facebook.com/lalala'
+        ));
+        
+        $this->assertEquals(true, SocialVideo::isLocalUrl(
+            '/lalala.mp4'
+        ));
+    }
+
+    /**
+     * Checks that videos are considered as coming from a social network.
+     *
+     * @param string An url of a video stored on a social network.
+     */
+    public function test_isOtherUrl()
+    {
+        foreach ($this->validUrlsParameterSet() as $parameterSet)
+            $this->assertEquals(false, SocialVideo::isOtherUrl($parameterSet[0]));
+        
+        $this->assertEquals(true, SocialVideo::isOtherUrl(
+            'https://www.facebook.com/lalala'
+        ));
+        
+        $this->assertEquals(true, SocialVideo::isOtherUrl(
+            '/lalala.mp4'
+        ));
+    }
+
+    /**
+     * Checks the composition of a DailyMotion embeded url.
+     */
+    public function test_getEmbededDailyMotionVideoLocation()
+    {
+        $url = VisibilityViolator::callHiddenMethod(
+            'JClaveau\SocialVideo\SocialVideo',
+            'getEmbededDailyMotionVideoLocation',
+            ['lala']
+        );
+        
+        $this->assertEquals(
+            'http://www.dailymotion.com/embed/video/lala',
+            $url
+        );
+    }
+
+    /**
+     * Checks the composition of a Vimeo embeded url.
+     */
+    public function test_getEmbededVimeoVideoLocation()
+    {
+        $url = VisibilityViolator::callHiddenMethod(
+            'JClaveau\SocialVideo\SocialVideo',
+            'getEmbededVimeoVideoLocation',
+            ['lala']
+        );
+        
+        $this->assertEquals(
+            'http://player.vimeo.com/video/lala',
+            $url
+        );
+    }
+
+    /**
+     * Checks the composition of a Youtube embeded url.
+     */
+    public function test_getEmbededYoutubeLocation()
+    {
+        $url = VisibilityViolator::callHiddenMethod(
+            'JClaveau\SocialVideo\SocialVideo',
+            'getEmbededYoutubeVideoLocation',
+            ['lala']
+        );
+        
+        $this->assertEquals(
+            'http://www.youtube.com/embed/lala',
+            $url
+        );
+    }
+
+    /**
+     * Checks the composition of a Facebook embeded url.
+     */
+    public function test_getEmbededFacebookLocation()
+    {
+        $url = VisibilityViolator::callHiddenMethod(
+            'JClaveau\SocialVideo\SocialVideo',
+            'getEmbededFacebookVideoLocation',
+            ['lala']
+        );
+        
+        $this->assertEquals(
+            'https://www.facebook.com/plugins/video.php?href=lala',
+            $url
+        );
+    }
+
+    /**
      * Set of arguments for getEmbedVideo().
      *
      * @return array The parameters

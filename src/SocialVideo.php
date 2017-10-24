@@ -36,6 +36,16 @@ class SocialVideo
     }
 
     /**
+     * Lists all the enabled networks of this api.
+     *
+     * @return array
+     */
+    public static function listEnabledNetworks()
+    {
+        return array_keys( array_filter(self::$enabledSocialNetworks) );
+    }
+
+    /**
      * Checks that the social network given as parameter is enabled
      *
      * @return bool Whether or not the support of videos from the social
@@ -314,24 +324,68 @@ class SocialVideo
      *
      * @return string The url of an embeded video in an iframe
      */
-    public static function getVideoLocation($url)
+    public static function getEmbededVideoLocation($url)
     {
-        if (false !== ($id = self::getDailyMotionId($url))) {
-            return 'http://www.dailymotion.com/embed/video/' . $id;
+        if ($id = self::getDailyMotionId($url)) {
+            return self::getEmbededDailyMotionVideoLocation($id);
         }
-        elseif (false !== ($id = self::getVimeoId($url))) {
-            return 'http://player.vimeo.com/video/' . $id;
+        elseif ($id = self::getVimeoId($url)) {
+            return self::getEmbededVimeoVideoLocation($id);
         }
-        elseif (false !== ($id = self::getYoutubeId($url))) {
-            return 'http://www.youtube.com/embed/' . $id;
+        elseif ($id = self::getYoutubeId($url)) {
+            return self::getEmbededYoutubeVideoLocation($id);
         }
-        else if (self::isOtherUrl($url)) {
+        elseif (self::isOtherUrl($url)) {
             return $url;
         }
         else {
             throw new \InvalidArgumentException("The $url parameter"
                 ." doesn't seem to ve a valid URL" );
         }
+    }
+
+    /**
+     * Generates the url of an embeded video from DailyMotion.
+     * 
+     * @param  $id
+     * @return string The url of the embeded video
+     */
+    protected static function getEmbededDailyMotionVideoLocation($id)
+    {
+        return 'http://www.dailymotion.com/embed/video/' . $id;
+    }
+
+    /**
+     * Generates the url of an embeded video from Vimeo.
+     * 
+     * @param  $id
+     * @return string The url of the embeded video
+     */
+    protected static function getEmbededVimeoVideoLocation($id)
+    {
+        return 'http://player.vimeo.com/video/' . $id;
+    }
+
+    /**
+     * Generates the url of an embeded video from Youtube.
+     * 
+     * @param  $id
+     * @return string The url of the embeded video
+     */
+    protected static function getEmbededYoutubeVideoLocation($id)
+    {
+        return 'http://www.youtube.com/embed/' . $id;
+    }
+
+    /**
+     * Generates the url of an embeded video from Facebook.
+     * 
+     * @param  $id
+     * @return string The url of the embeded video
+     */
+    protected static function getEmbededFacebookVideoLocation($id)
+    {
+        return 'https://www.facebook.com/plugins/video.php?href=' . $id;
     }
 
     /**
@@ -382,14 +436,14 @@ class SocialVideo
     {
         if ($id = self::getYoutubeId($url)) {
             $attributes = [
-                'src'                   => 'http://www.youtube.com/embed/' . $id,
+                'src'                   => self::getEmbededYoutubeVideoLocation($id),
                 'frameborder'           => 0,
                 'allowFullScreen'       => true,
             ];
         }
         elseif ($id = self::getDailyMotionId($url)) {
             $attributes = [
-                'src'                   => 'http://www.dailymotion.com/embed/video/' . $id,
+                'src'                   => self::getEmbededDailyMotionVideoLocation($id),
                 'frameborder'           => 0,
                 'webkitAllowFullScreen' => true,
                 'mozallowfullscreen'    => true,
@@ -410,7 +464,7 @@ class SocialVideo
             // </iframe>
 
             $attributes = [
-                'src'                   => 'https://www.facebook.com/plugins/video.php?href=' . $id,
+                'src'                   => self::getEmbededFacebookVideoLocation($id),
                 'frameborder'           => 0,
                 'scrolling'             => "no",
                 'style'                 => "border: none; overflow: hidden",
@@ -420,7 +474,7 @@ class SocialVideo
         }
         elseif ($id = self::getVimeoId($url)) {
             $attributes = [
-                'src'                   => 'http://player.vimeo.com/video/' . $id,
+                'src'                   => self::getEmbededVimeoVideoLocation($id),
                 'frameborder'           => 0,
                 'webkitAllowFullScreen' => true,
                 'mozallowfullscreen'    => true,

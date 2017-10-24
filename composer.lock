@@ -68,12 +68,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jclaveau/php-visibility-violator.git",
-                "reference": "8bd0456aff4c943d4b371a530e3ae99269a5b2fd"
+                "reference": "d6187b0d2a498e9c53754859330f7422382f000a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jclaveau/php-visibility-violator/zipball/8bd0456aff4c943d4b371a530e3ae99269a5b2fd",
-                "reference": "8bd0456aff4c943d4b371a530e3ae99269a5b2fd",
+                "url": "https://api.github.com/repos/jclaveau/php-visibility-violator/zipball/d6187b0d2a498e9c53754859330f7422382f000a",
+                "reference": "d6187b0d2a498e9c53754859330f7422382f000a",
                 "shasum": ""
             },
             "require": {
@@ -108,7 +108,7 @@
                 "source": "https://github.com/jclaveau/php-visibility-violator/tree/master",
                 "issues": "https://github.com/jclaveau/php-visibility-violator/issues"
             },
-            "time": "2017-10-09 12:28:58"
+            "time": "2017-10-24 18:15:15"
         },
         {
             "name": "phpdocumentor/reflection-common",
