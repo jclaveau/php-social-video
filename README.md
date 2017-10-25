@@ -7,6 +7,9 @@ which social network they come from.
 
 All those helpers are stored in [SocialVideo.php](https://github.com/jclaveau/php-social-video/blob/master/src/SocialVideo.php)
 
+Api reference can be found here [API reference](docs/JClaveau-SocialVideo-SocialVideo.md)
+
+
 Quality
 --------------
 [![Build Status](https://travis-ci.org/jclaveau/php-social-video.png?branch=master)](https://travis-ci.org/jclaveau/php-social-video)
