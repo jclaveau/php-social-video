@@ -1,8 +1,8 @@
 {
     "name": "jclaveau/php-social-video",
-    "description": "Library to ease handling of social video urls.",
+    "description": "Library to ease handling of videos from social networks.",
     "license": "MIT",
-    "keywords": ["youtube", "dailymotion", "vimeo"],
+    "keywords": ["youtube", "dailymotion", "vimeo", "facebook", "twitch"],
     "authors": [
         {
             "name": "Jean Claveau",
@@ -27,10 +27,10 @@
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
         "jclaveau/php-visibility-violator": "dev-master",
-        "phpdocumentor/phpdocumentor": "2.*",
-        "evert/phpdoc-md" : "~0.2.0"
+        "evert/phpdoc-md" : "~0.2.0",
+        "phpdocumentor/phpdocumentor" : "~2.8.0"
     },
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.5.0"
     }
 }
