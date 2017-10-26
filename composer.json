@@ -28,12 +28,14 @@
         "phpunit/phpunit": "4.8.*",
         "jclaveau/php-visibility-violator": "dev-master",
         "evert/phpdoc-md": "~0.2.0",
-        "phpdocumentor/phpdocumentor": "~2.8.0"
+        "phpdocumentor/phpdocumentor": "~2.8.0",
+
+        "doctrine/annotations": "1.2.7",
+        "zendframework/zend-eventmanager": "3.0.1",
+        "zendframework/zend-i18n": "2.7.3",
+        "zendframework/zend-serializer": "2.7.2"
     },
     "require": {
         "php": ">=5.5.0"
-    },
-    "platform": {
-        "php": "5.5"
     }
 }
