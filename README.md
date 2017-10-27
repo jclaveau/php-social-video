@@ -15,7 +15,7 @@ Quality
 [![Build Status](https://travis-ci.org/jclaveau/php-social-video.png?branch=master)](https://travis-ci.org/jclaveau/php-social-video)
 [![codecov](https://codecov.io/gh/jclaveau/php-social-video/branch/master/graph/badge.svg)](https://codecov.io/gh/jclaveau/php-social-video)
 [![Maintainability](https://api.codeclimate.com/v1/badges/75c89e5e61ab58d5fc71/maintainability)](https://codeclimate.com/github/jclaveau/php-social-video/maintainability)
-[![Dependency Status](https://www.versioneye.com/user/projects/59f1ff410fb24f1093761d32/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59f1ff410fb24f1093761d32)
+[![Dependency Status](https://www.versioneye.com/user/projects/59f33e0515f0d7003ff197c3/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59f33e0515f0d7003ff197c3)
 
 Supported social networks
 --------------
