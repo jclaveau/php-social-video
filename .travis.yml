@@ -11,8 +11,7 @@ php:
 # Commands to be run before your environment runs.
 before_script:
  - composer self-update
- - composer diagnose
- - composer install --no-interaction
+ - composer update --no-interaction
 
 # Commands you want to run that will verify your build.
 script: ./phpunit --coverage-clover=coverage.xml

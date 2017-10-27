@@ -21,7 +21,8 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/jclaveau/php-visibility-violator"
+            "url": "https://github.com/jclaveau/php-visibility-violator",
+            "no-api": true
         }
     ],
     "require-dev": {
@@ -32,8 +33,5 @@
     },
     "require": {
         "php": ">=5.5.0"
-    },
-    "platform": {
-        "php": "5.5"
     }
 }
