@@ -509,6 +509,64 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     */
+    public function test_getEmbededVideoLocation()
+    {
+        foreach ($this->validUrls[ SocialVideo::YOUTUBE ] as $expected_id => $urls) {
+            if (!$expected_id)
+                continue;
+            
+            foreach ($urls as $url) {
+                $this->assertEquals(
+                    'http://www.youtube.com/embed/' . $expected_id,
+                    SocialVideo::getEmbededVideoLocation($url)
+                );
+            }
+        }
+        
+        foreach ($this->validUrls[ SocialVideo::DAILYMOTION ] as $expected_id => $urls) {
+            if (!$expected_id)
+                continue;
+            
+            foreach ($urls as $url) {
+                $this->assertEquals(
+                    'http://www.dailymotion.com/embed/video/' . $expected_id,
+                    SocialVideo::getEmbededVideoLocation($url)
+                );
+            }
+        }
+        
+        foreach ($this->validUrls[ SocialVideo::VIMEO ] as $expected_id => $urls) {
+            if (!$expected_id)
+                continue;
+            
+            foreach ($urls as $url) {
+                $this->assertEquals(
+                    'http://player.vimeo.com/video/' . $expected_id,
+                    SocialVideo::getEmbededVideoLocation($url)
+                );
+            }
+        }
+
+        //foreach ($this->validUrls[ SocialVideo::FACEBOOK ] as $expected_id => $urls) {
+            //if ($expected_id === null)
+                //continue;
+            
+            //foreach ($urls as $url) {
+                //$embed_url = SocialVideo::getEmbededVideoLocation($url);
+                //$this->assertEquals(
+                    //'https://www.facebook.com/plugins/video.php?href=' . $expected_id,
+                    //$embed_url
+                //);
+            //}
+        //}
+    }
+
+
+    
+
+
+    /**
      * Set of arguments for getEmbedVideo().
      *
      * @return array The parameters
