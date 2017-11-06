@@ -579,6 +579,48 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     */
+    public function test_getEmbedVideoHtml()
+    {
+        // youtube
+        $html = SocialVideo::getEmbedVideoHtml("https://youtube.com/v/nCwRJUg3tcQ");
+        $this->assertEquals(
+            '<iframe src="http://www.youtube.com/embed/nCwRJUg3tcQ" frameborder="0" allowFullScreen ></iframe>',
+            $html
+        );
+        
+        // dailymotion
+        $html = SocialVideo::getEmbedVideoHtml('http://www.dailymotion.com/video/x2jvvep_coup-incroyable-pendant-un-match-de-ping-pong_tv');
+        $this->assertEquals(
+            '<iframe src="http://www.dailymotion.com/embed/video/x2jvvep" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen ></iframe>',
+            $html
+        );
+        
+        // vimeo
+        $html = SocialVideo::getEmbedVideoHtml('https://vimeo.com/87973054');
+        $this->assertEquals(
+            '<iframe src="http://player.vimeo.com/video/87973054" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen ></iframe>',
+            $html
+        );
+        
+        // other
+        $html = SocialVideo::getEmbedVideoHtml('https://bidule.com/lala.mp4');
+        $this->assertEquals(
+            '<video src="https://bidule.com/lala.mp4" frameborder="0" controls ></video>',
+            $html
+        );
+        
+        // other with video element support disabled
+        SocialVideo::setVideoElementEnablement(false);
+        $html = SocialVideo::getEmbedVideoHtml('https://bidule.com/lala.mp4');
+        $this->assertEquals(
+            '<iframe src="https://bidule.com/lala.mp4" frameborder="0" controls ></iframe>',
+            $html
+        );
+        SocialVideo::setVideoElementEnablement(true);
+    }
+
 
     
 

@@ -25,6 +25,21 @@ class SocialVideo
         self::TWITCH      => null,    // TODO support not implemented
     ];
 
+    protected static $videoElementEnabled = true;
+    
+    /**
+     * Sets the enablement of the support of the video element.
+     * 
+     * @param bool $value Enable or disable the video element support.
+     */
+    public static function setVideoElementEnablement($value)
+    {
+        if (!is_bool($value))
+            throw new \InvalidArgumentException('$value must be a bool');
+        
+        self::$videoElementEnabled = $value;
+    }
+    
     /**
      * Lists all the networks known by this api.
      *
@@ -422,14 +437,18 @@ class SocialVideo
                 $iframeAttributes[$name] = $value;
         }
 
-        $html = '<iframe ';
+        $tag = !self::$videoElementEnabled || self::isSocialVideo($url)
+             ? 'iframe'
+             : 'video';
+
+        $html = "<$tag ";
         foreach ($iframeAttributes as $name => $value) {
             if ($value === true)
                 $html .= $name .' ';
             else
                 $html .= $name . '="' . $value . '" ';
         }
-        $html .= '></iframe>';
+        $html .= "></$tag>";
 
         return $html;
     }
