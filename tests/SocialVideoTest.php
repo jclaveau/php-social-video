@@ -569,6 +569,7 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
         
         // invalid urls 
         try {
+            SocialVideo::getEmbededVideoLocation('');
             $this->assertTrue(false, "An InvalidArgumentException MUST have been thrown here");
         }
         catch (\InvalidArgumentException $e) {
