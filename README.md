@@ -29,7 +29,6 @@ Supported social networks
 Todo
 --------------
 - Implement Facebook videos support
-- video element for local videos
 - Make the testing exhaustive
 - Documentation
 - packagist
