@@ -229,7 +229,8 @@ class SocialVideo
      */
     public static function isOtherUrl($url)
     {
-        return !self::isSocialVideo($url)
+        return $url
+            && !self::isSocialVideo($url)
             && (bool) parse_url($url);
     }
 
@@ -243,7 +244,8 @@ class SocialVideo
     {
         $parts = parse_url($url);
 
-        return !self::isSocialVideo($url)
+        return $url
+            && !self::isSocialVideo($url)
             && $parts && empty($parts['host']);
     }
 
@@ -276,6 +278,8 @@ class SocialVideo
      * takes one of the following values:
      *      - small         (returns the url for a small thumbnail)
      *      - medium        (returns the url for a medium thumbnail)
+     * 
+     * @see https://stackoverflow.com/questions/7000856/how-to-get-facebook-video-thumbnail-from-its-video-id
      */
     public static function getVideoThumbnailByUrl($url, $format = 'small')
     {
@@ -309,6 +313,13 @@ class SocialVideo
             }
             return 'http://img.youtube.com/vi/' . $id . '/default.jpg';
         }
+        elseif ($id = self::getFacebookId($url)) {
+            //if ('medium' === $format) {
+                //return 'http://img.youtube.com/vi/' . $id . '/hqdefault.jpg';
+            //}
+            
+            return 'https://graph.facebook.com/' . $id . '/picture';
+        }
     }
 
     /**
@@ -339,8 +350,10 @@ class SocialVideo
             return $url;
         }
         else {
-            throw new \InvalidArgumentException("The $url parameter"
-                ." doesn't seem to ve a valid URL" );
+            throw new \InvalidArgumentException(
+                "The \$url parameter doesn't seem to ve a valid URL: "
+                . var_export($url, true)
+            );
         }
     }
 

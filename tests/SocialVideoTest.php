@@ -560,6 +560,23 @@ class SocialVideoTest extends PHPUnit_Framework_TestCase
                 //);
             //}
         //}
+        
+        // other urls 
+        $this->assertEquals(
+            'http://pouet.com/video/vide_oid',
+            SocialVideo::getEmbededVideoLocation('http://pouet.com/video/vide_oid')
+        );
+        
+        // invalid urls 
+        try {
+            $this->assertTrue(false, "An InvalidArgumentException MUST have been thrown here");
+        }
+        catch (\InvalidArgumentException $e) {
+            $this->assertEquals(
+                "The \$url parameter doesn't seem to ve a valid URL: ''",
+                $e->getMessage()
+            );
+        }
     }
 
 
