@@ -80,8 +80,37 @@ Properties
 * This property is **static**.
 
 
+### $videoElementEnabled
+
+    protected mixed $videoElementEnabled = true
+
+
+
+
+
+* Visibility: **protected**
+* This property is **static**.
+
+
 Methods
 -------
+
+
+### setVideoElementEnablement
+
+    mixed JClaveau\SocialVideo\SocialVideo::setVideoElementEnablement(boolean $value)
+
+Sets the enablement of the support of the video element.
+
+
+
+* Visibility: **public**
+* This method is **static**.
+
+
+#### Arguments
+* $value **boolean** - &lt;p&gt;Enable or disable the video element support.&lt;/p&gt;
+
 
 
 ### listKnownNetworks
