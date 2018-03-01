@@ -14,7 +14,6 @@ class SocialVideo
     const YOUTUBE     = 'Youtube';
     const FACEBOOK    = 'Facebook';
     const TWITCH      = 'Twitch';
-    const KOREUS      = 'Koreus';
 
     /** @var array $enabledSocialNetworks */
     protected static $enabledSocialNetworks = [
@@ -28,7 +27,9 @@ class SocialVideo
     protected static $videoElementEnabled = true;
     
     /**
-     * Sets the enablement of the support of the video element.
+     * Sets the enablement of the support of the video element. Use it
+     * if you want your embed video to be rendered in an iframe for
+     * legacy browsers / integrations.
      * 
      * @param bool $value Enable or disable the video element support.
      */
