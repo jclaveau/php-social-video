@@ -28,7 +28,8 @@ Supported social networks
 
 Installation
 --------------
-Until the version is setted up and the package published on packagist, you'll need to add the following lines to your composer.json.
+Until the version is setted up and the package published on packagist,
+you'll need to add the following lines to your composer.json.
 ```json
 {
     "repositories": [
@@ -45,12 +46,14 @@ Until the version is setted up and the package published on packagist, you'll ne
 
 Usage
 --------------
+Presently the tools are implemented staticly to preserve the extremmely
+low memory usage I need but an instanciable class will come eventualy.
 ```php
 
 // To extract an id from any youtube URI or check that it is a youtube URI
 $youtubeId = SocialVideo::getYoutubeId("https://youtube.com/v/nCwRJUg3tcQ");
 
-// To disaply really fastly a video player with the embed video corresponding
+// To display easily a video player with the embed video corresponding
 // to your URI
 $youtubeHtmlPlayer = SocialVideo::getEmbedVideoHtml("https://youtube.com/v/nCwRJUg3tcQ", [
     'width'  => 300, // custom with
@@ -59,14 +62,25 @@ $youtubeHtmlPlayer = SocialVideo::getEmbedVideoHtml("https://youtube.com/v/nCwRJ
 ]);
 echo $youtubeHtmlPlayer;
 
-
 // By default all the supported social networks are enabled
 SocialVideo::disableNetwork( SocialVideo::VIMEO );
 $vimeoId = SocialVideo::getVimeoId('http://vimeo.com/87973054');
 // $vimeoId is null as Vimeo support is disabled
-
-
 ```
+
+
+Test
+--------------
+```bash
+./phpunit
+```
+
+Update documentation
+--------------
+```bash
+./docs_generator
+```
+
 
 Todo
 --------------
