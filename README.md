@@ -39,7 +39,7 @@ you'll need to add the following lines to your composer.json.
         }
     ],
     "require": {
-        "jclaveau/php-social-video": "dev-master",
+        "jclaveau/php-social-video": "0.1.1",
     },
 }
 ```
@@ -53,8 +53,7 @@ low memory usage I need but an instanciable class will come eventualy.
 // To extract an id from any youtube URI or check that it is a youtube URI
 $youtubeId = SocialVideo::getYoutubeId("https://youtube.com/v/nCwRJUg3tcQ");
 
-// To display easily a video player with the embed video corresponding
-// to your URI
+// To display easily a video player with the embed video corresponding to your URI
 $youtubeHtmlPlayer = SocialVideo::getEmbedVideoHtml("https://youtube.com/v/nCwRJUg3tcQ", [
     'width'  => 300, // custom with
     'height' => 200, // custom height 
